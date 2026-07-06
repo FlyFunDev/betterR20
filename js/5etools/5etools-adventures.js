@@ -486,7 +486,7 @@ function d20plusAdventure () {
 				background_color: "#FFFFFF",
 				gridcolor: "#C0C0C0",
 				grid_type: grid.type || "square",
-				scale_number: grid.distance || gridScale * 5,
+				scale_number: grid.distance || (gridScale * 5),
 				scale_units: grid.units || "ft",
 				archived: false,
 				thumbnail: imgUrl,
