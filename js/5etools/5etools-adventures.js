@@ -208,15 +208,9 @@ function d20plusAdventure () {
 	}
 
 	// Convert all Foundry walls for a map to Roll20 paths
-	function convertFoundryWalls (foundryMap, roll20W, roll20H) {
+	function convertFoundryWalls (foundryMap, scale) {
 		const walls = foundryMap.walls || [];
 		if (!walls.length) return [];
-		const xs = walls.flatMap(w => w.c?.length === 4 ? [w.c[0], w.c[2]] : []);
-		const ys = walls.flatMap(w => w.c?.length === 4 ? [w.c[1], w.c[3]] : []);
-		if (!xs.length) return [];
-		const maxX = Math.max(...xs), maxY = Math.max(...ys);
-		if (maxX <= 0 || maxY <= 0) return [];
-		const scale = Math.min(roll20W / maxX, roll20H / maxY);
 		return walls.map(w => foundryWallToPath(w, scale)).filter(Boolean);
 	}
 
@@ -456,11 +450,11 @@ function d20plusAdventure () {
 		const foundryMap = foundryMaps && (foundryMaps[title.toLowerCase()] || foundryMaps[normalizeMapName(title)]);
 		let paths = [];
 		if (foundryMap) {
-			paths = convertFoundryWalls(foundryMap, roll20W, roll20H);
+			paths = convertFoundryWalls(foundryMap, imageScale);
 			d20plus.ut.log(`Map "${title}": ${paths.length} wall/door paths from Foundry data`);
 		} else {
 			(entry.mapRegions || []).forEach(r => {
-				const p = regionToPath(r, scaleX, scaleY);
+				const p = regionToPath(r, imageScale, imageScale);
 				if (p) paths.push(p);
 			});
 			if (paths.length) d20plus.ut.log(`Map "${title}": ${paths.length} mapRegion outlines (no Foundry data)`);
