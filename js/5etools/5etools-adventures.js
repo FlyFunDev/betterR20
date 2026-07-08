@@ -387,13 +387,16 @@ function d20plusAdventure () {
 		const grid = entry.grid || {};
 		const imgPixelW = entry.width || 1750;
 		const imgPixelH = entry.height || 1750;
-		const offsetX = (grid.offsetX || 0) * -1;
-		const offsetY = (grid.offsetY || 0) * -1;
 		let gridSizePx = grid.size || 0;
 		if (!gridSizePx && grid.type) {
 			gridSizePx = GRID_DIVISORS.find(d => imgPixelW % d === 0 && imgPixelH % d === 0) || 0;
 		}
 		if (!gridSizePx) gridSizePx = 70;
+		const gridScale = grid.scale || 1;
+
+		const scaledGridPx = gridScale * gridSizePx;
+		const offsetX = grid.offsetX > 0 ? scaledGridPx * - (grid.offsetX % scaledGridPx) : (grid.offsetX || 0) * -1;
+		const offsetY = grid.offsetY > 0 ? scaledGridPx - (grid.offsetY % scaledGridPx) : (grid.offsetY || 0) * -1;
 
 		// Subdivision factor for when `grid.size` is a multiple of the painted grid pitch
 		// (e.g. declared 50px but the art has a 16.7px grid painted on it, 3x finer).
